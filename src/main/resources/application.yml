@@ -1,0 +1,31 @@
+spring:
+    application:
+        name: ClientRegistrationService
+
+    datasource:
+        url: jdbc:postgresql://localhost:5433/t1_bank_demo
+        username: postgres
+        password: "0000"
+        driverClassName: org.postgresql.Driver
+    liquibase:
+        enabled: true
+        change-log: db/changelog/master-changelog.yaml
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5433/t1_bank_demo
+        user: postgres
+        password: "0000"
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: validate
+
+logging:
+    level:
+        ROOT: DEBUG
+        ru.t1.java.demo.controller.ClientController: DEBUG
+        org.apache.kafka: INFO
+        org.hibernate.SQL: INFO
+
+security:
+    token: tstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5h
+    expiration: 86400000
