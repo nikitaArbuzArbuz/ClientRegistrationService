@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - preConditions:
+      - dbms:
+          type: postgresql
+
+  - changeSet:
+      id: 001-214808102024-create-schema
+      author: Nikita Pushkin
+      comment: Create schema bank
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: 001-214808102024-create-schema.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 002-214908102024-create-sequences
+      author: Nikita Pushkin
+      comment: Create sequences for tables
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: 002-214908102024-create-sequences.sql
+            relativeToChangelogFile: true
+
+  - changeSet:
+      id: 003-215208102024-create-tables
+      author: Nikita Pushkin
+      comment: Create tables in bank schema
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: 003-215208102024-create-tables.sql
+            relativeToChangelogFile: true
