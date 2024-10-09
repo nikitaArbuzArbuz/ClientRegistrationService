@@ -3,7 +3,6 @@ package ru.t1.java.clientregistrationservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,7 +14,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "transactions", schema = "bank")
-public class Transaction extends AbstractPersistable<Long> {
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transactions_seq")
+    @SequenceGenerator(name = "transactions_seq", sequenceName = "transactions_seq", schema = "bank")
+    @Column(name = "id")
+    private Long id;
 
     @ManyToOne
     @JsonIgnore

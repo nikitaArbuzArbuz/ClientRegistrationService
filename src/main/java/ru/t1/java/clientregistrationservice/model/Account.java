@@ -3,7 +3,6 @@ package ru.t1.java.clientregistrationservice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -15,7 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "accounts", schema = "bank")
-public class Account extends AbstractPersistable<Long> {
+public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_seq")
+    @SequenceGenerator(name = "accounts_seq", sequenceName = "accounts_seq", schema = "bank")
+    @Column(name = "id")
+    private Long id;
+
     @Column(name = "account_number")
     private String accountNumber;
 
@@ -40,12 +45,6 @@ public class Account extends AbstractPersistable<Long> {
     @ToString.Exclude
     private Set<Transaction> transactions;
 
-    public enum AccountType {
-        DEPOSIT, CREDIT
-    }
-
-
-
     public void blockAccount() {
         this.isBlocked = true;
     }
@@ -58,5 +57,9 @@ public class Account extends AbstractPersistable<Long> {
         if (accountType == AccountType.CREDIT && balance.compareTo(creditLimit.negate()) <= 0) {
             blockAccount();
         }
+    }
+
+    public enum AccountType {
+        DEPOSIT, CREDIT
     }
 }
