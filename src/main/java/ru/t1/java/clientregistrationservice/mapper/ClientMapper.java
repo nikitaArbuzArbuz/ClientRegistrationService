@@ -1,7 +1,9 @@
 package ru.t1.java.clientregistrationservice.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.t1.java.clientregistrationservice.model.Client;
 import ru.t1.java.clientregistrationservice.model.dto.ClientDto;
 
@@ -15,5 +17,5 @@ public abstract class ClientMapper {
     @Mapping(target = "email", source = "email")
     @Mapping(target = "accounts", source = "accounts")
     @Mapping(target = "roles", source = "roles")
-    public abstract ClientDto map(Client dto);
+    public abstract ClientDto map(Client client);
 }

@@ -35,10 +35,12 @@ public class Account {
     private AccountType accountType;
 
     @Column(name = "balance", precision = 19, scale = 2)
-    private BigDecimal balance;
+    @Builder.Default
+    private BigDecimal balance = new BigDecimal("0.00");
 
     @Column(name = "is_blocked")
-    private boolean isBlocked;
+    @Builder.Default
+    private boolean isBlocked = false;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude

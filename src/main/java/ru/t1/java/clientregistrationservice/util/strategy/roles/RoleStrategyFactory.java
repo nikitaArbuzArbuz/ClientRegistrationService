@@ -1,4 +1,4 @@
-package ru.t1.java.clientregistrationservice.util.strategy;
+package ru.t1.java.clientregistrationservice.util.strategy.roles;
 
 import org.springframework.stereotype.Service;
 

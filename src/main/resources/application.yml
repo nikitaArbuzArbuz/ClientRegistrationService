@@ -29,3 +29,6 @@ logging:
 security:
   token: tstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5h
   expiration: 86400000
+
+account:
+  limit-for-credit: 50000.00

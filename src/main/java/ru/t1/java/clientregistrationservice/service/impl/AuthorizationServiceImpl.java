@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.t1.java.clientregistrationservice.mapper.ClientMapper;
 import ru.t1.java.clientregistrationservice.model.Client;
 import ru.t1.java.clientregistrationservice.model.Role;
@@ -20,7 +21,7 @@ import ru.t1.java.clientregistrationservice.model.dto.SignupRequest;
 import ru.t1.java.clientregistrationservice.repository.ClientRepository;
 import ru.t1.java.clientregistrationservice.service.AuthorizationService;
 import ru.t1.java.clientregistrationservice.util.JwtUtils;
-import ru.t1.java.clientregistrationservice.util.strategy.RoleStrategyFactory;
+import ru.t1.java.clientregistrationservice.util.strategy.roles.RoleStrategyFactory;
 
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +52,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
+        log.info("Пользователь с Login {} успешно аутентифицирован", userDetails.getUsername());
 
         return new JwtResponse(jwt,
                 userDetails.getId(),
@@ -59,6 +61,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
                 roles);
     }
 
+    @Transactional
     @Override
     public ClientDto register(SignupRequest signUpRequest) {
 
@@ -87,6 +90,8 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
         client.setRoles(roles);
         clientRepository.saveAndFlush(client);
+
+        log.info("Пользователь успешно зарегистрирован login {}", client.getLogin());
 
         return clientMapper.map(client);
     }
