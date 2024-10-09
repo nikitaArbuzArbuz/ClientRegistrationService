@@ -1,5 +1,6 @@
 package ru.t1.java.clientregistrationservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq")
     @SequenceGenerator(name = "roles_seq", sequenceName = "roles_seq", schema = "bank")
     @Column(name = "id")
+    @JsonIgnore
     private Long id;
 
     @Enumerated(EnumType.STRING)
