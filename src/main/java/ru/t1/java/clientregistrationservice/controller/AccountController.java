@@ -2,6 +2,7 @@ package ru.t1.java.clientregistrationservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.java.clientregistrationservice.model.dto.AccountDto;
@@ -23,5 +24,12 @@ public class AccountController {
                 .header("Server",
                         new MessageResponse("Account created successfully!").getMessage())
                 .body(accountService.createAccount(accountDto));
+    }
+
+    @PostMapping("/unblock/{accountId}")
+    public ResponseEntity<String> unblockAccount(@PathVariable Long accountId) {
+        return accountService.unblockAccount(accountId) ?
+                ResponseEntity.ok("Account unblocked and transaction retried") :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds to unblock credit account");
     }
 }

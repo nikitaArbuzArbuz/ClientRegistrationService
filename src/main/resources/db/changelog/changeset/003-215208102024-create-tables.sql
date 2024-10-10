@@ -33,6 +33,7 @@ CREATE TABLE bank.transactions
     amount           DECIMAL(19, 2),
     transaction_date TIMESTAMP,
     description      VARCHAR(255),
+    is_cancel        BOOLEAN,
     FOREIGN KEY (account_id) REFERENCES bank.accounts (id) ON DELETE CASCADE
 );
 

@@ -13,6 +13,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "accounts", schema = "bank")
 public class Account {
     @Id
@@ -21,7 +22,7 @@ public class Account {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "account_number")
+    @Column(name = "account_number", unique = true, nullable = false)
     private String accountNumber;
 
     @ManyToOne

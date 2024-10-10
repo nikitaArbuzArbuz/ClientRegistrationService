@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "transactions", schema = "bank")
 public class Transaction {
     @Id
@@ -36,4 +37,12 @@ public class Transaction {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "is_cancel")
+    @Builder.Default
+    private boolean isCancel = false;
+
+    public void cancelTransaction() {
+        isCancel = true;
+    }
 }

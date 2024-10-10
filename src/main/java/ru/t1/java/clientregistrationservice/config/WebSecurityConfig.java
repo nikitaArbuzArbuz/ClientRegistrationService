@@ -23,7 +23,7 @@ import ru.t1.java.clientregistrationservice.util.JwtUtils;
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtils jwtUtils;
     private final AuthEntryPointJwt unauthorizedHandler;
