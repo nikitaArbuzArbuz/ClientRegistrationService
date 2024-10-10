@@ -1,3 +1,10 @@
+CREATE TABLE bank.roles
+(
+    id   BIGINT NOT NULL PRIMARY KEY,
+    name VARCHAR(20)
+);
+
+
 CREATE TABLE bank.clients
 (
     id         BIGINT       NOT NULL PRIMARY KEY,
@@ -5,9 +12,7 @@ CREATE TABLE bank.clients
     last_name  VARCHAR(255),
     login      VARCHAR(20)  NOT NULL UNIQUE,
     email      VARCHAR(50)  NOT NULL UNIQUE,
-    password   VARCHAR(120) NOT NULL,
-    name       VARCHAR(20),
-    CONSTRAINT chk_role_enum CHECK (name IN ('ROLE_USER', 'ROLE_ADMIN'))
+    password   VARCHAR(120) NOT NULL
 );
 
 CREATE TABLE bank.accounts
@@ -18,8 +23,7 @@ CREATE TABLE bank.accounts
     account_type   VARCHAR(20),
     balance        DECIMAL(19, 2),
     is_blocked     BOOLEAN,
-    FOREIGN KEY (client_id) REFERENCES bank.clients (id) ON DELETE CASCADE,
-    CONSTRAINT chk_account_type CHECK (account_type IN ('DEPOSIT', 'CREDIT'))
+    FOREIGN KEY (client_id) REFERENCES bank.clients (id) ON DELETE CASCADE
 );
 
 CREATE TABLE bank.transactions
@@ -30,4 +34,13 @@ CREATE TABLE bank.transactions
     transaction_date TIMESTAMP,
     description      VARCHAR(255),
     FOREIGN KEY (account_id) REFERENCES bank.accounts (id) ON DELETE CASCADE
+);
+
+CREATE TABLE bank.client_roles
+(
+    role_id   BIGINT NOT NULL,
+    client_id BIGINT NOT NULL,
+    CONSTRAINT pk_clients_roles PRIMARY KEY (role_id, client_id),
+    CONSTRAINT fk_userol_on_role FOREIGN KEY (role_id) REFERENCES bank.roles (id),
+    CONSTRAINT fk_userol_on_client FOREIGN KEY (client_id) REFERENCES bank.clients (id)
 );

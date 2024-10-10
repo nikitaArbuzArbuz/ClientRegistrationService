@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,11 +13,16 @@ import java.util.Set;
 @Setter
 @Entity
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Table(name = "clients", schema = "bank")
-public class Client extends AbstractPersistable<Long> {
+public class Client {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_seq")
+    @SequenceGenerator(name = "clients_seq", sequenceName = "clients_seq", schema = "bank")
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -44,15 +48,18 @@ public class Client extends AbstractPersistable<Long> {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Account> accounts;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20)
-    private RoleEnum name;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "client_roles", schema = "bank",
+            joinColumns = @JoinColumn(name = "client_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
-    public enum RoleEnum {
-        ROLE_USER,
-        ROLE_ADMIN
+    public Client(String login, String email, String password) {
+        this.login = login;
+        this.email = email;
+        this.password = password;
     }
 }

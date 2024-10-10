@@ -32,3 +32,13 @@ databaseChangeLog:
         - sqlFile:
             path: 003-215208102024-create-tables.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 004-020009102024-insert-roles
+      author: Nikita Pushkin
+      comment: Insert data into table roles
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: 004-020009102024-insert-roles.sql
+            relativeToChangelogFile: true
