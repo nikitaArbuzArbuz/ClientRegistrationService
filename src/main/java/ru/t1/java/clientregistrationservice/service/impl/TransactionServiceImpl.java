@@ -15,6 +15,7 @@ import ru.t1.java.clientregistrationservice.service.ClientService;
 import ru.t1.java.clientregistrationservice.service.TransactionService;
 import ru.t1.java.clientregistrationservice.util.exceptions.AccountBlockedException;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
+import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final KafkaTransactProducer kafkaTransactProducer;
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionMapper transactionMapper;
+    private final TransactionStrategyFactory transactionStrategyFactory;
 
     @Transactional
     @Override
@@ -43,10 +45,14 @@ public class TransactionServiceImpl implements TransactionService {
                     throw new AccountBlockedException("Account with ID " + account.getId() + " is blocked", transaction.getId());
                 }
 
+                if (transaction.getType() == Transaction.TransactionType.CANCEL) {
+                    cancelTransaction(transaction.getId());
+                    continue;
+                }
+
                 transaction.setAccount(account);
 
-                accountStrategyFactory.getStrategy(account.getAccountType())
-                        .changeBalance(account, transaction);
+                accountStrategyFactory.getStrategy(account.getAccountType()).changeBalance(account, transaction);
 
                 log.info("Транзакция с id {} прошла", transaction.getId());
 
@@ -68,7 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
         Account account = transaction.getAccount();
-        accountStrategyFactory.getStrategy(account.getAccountType()).adjustmentBalance(account, transaction);
+        accountStrategyFactory.getStrategy(account.getAccountType()).changeBalance(account, transaction);
 
         transactionRepository.delete(transaction);
     }

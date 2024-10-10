@@ -38,11 +38,19 @@ public class Transaction {
     @Column(name = "description")
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type")
+    private TransactionType type;
+
     @Column(name = "is_cancel")
     @Builder.Default
     private boolean isCancel = false;
 
     public void cancelTransaction() {
         isCancel = true;
+    }
+
+    public enum TransactionType {
+        ADD, SUBTRACT, CANCEL
     }
 }

@@ -7,7 +7,9 @@ import ru.t1.java.clientregistrationservice.model.Account;
 import ru.t1.java.clientregistrationservice.model.Client;
 import ru.t1.java.clientregistrationservice.model.Transaction;
 import ru.t1.java.clientregistrationservice.repository.AccountRepository;
+import ru.t1.java.clientregistrationservice.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.service.ClientService;
+import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ public class DepositAccountStrategy implements AccountStrategy {
 
     private final AccountRepository accountRepository;
     private final ClientService clientService;
+    private final TransactionStrategyFactory transactionStrategyFactory;
 
     @Transactional
     @Override
@@ -30,7 +33,7 @@ public class DepositAccountStrategy implements AccountStrategy {
 
     @Override
     public void changeBalance(Account account, Transaction transaction) {
-        account.setBalance(account.getBalance().add(transaction.getAmount()));
+        transactionStrategyFactory.getStrategy(transaction.getType()).changeBalance(account, transaction);
     }
 
     @Override
@@ -38,11 +41,5 @@ public class DepositAccountStrategy implements AccountStrategy {
         account.unblockAccount();
         accountRepository.saveAndFlush(account);
         return true;
-    }
-
-    @Override
-    public void adjustmentBalance(Account account, Transaction transaction) {
-        account.setBalance(account.getBalance().subtract(transaction.getAmount()));
-        accountRepository.saveAndFlush(account);
     }
 }

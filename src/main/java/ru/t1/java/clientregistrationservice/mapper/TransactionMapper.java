@@ -18,6 +18,7 @@ public abstract class TransactionMapper {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "amount", source = "amount")
     @Mapping(target = "description", source = "description")
+    @Mapping(target = "type", source = "type")
     @Mapping(target = "transactionDate", expression = "java(java.time.LocalDateTime.now())")
     public abstract Transaction map(TransactionDto transactionDto);
 

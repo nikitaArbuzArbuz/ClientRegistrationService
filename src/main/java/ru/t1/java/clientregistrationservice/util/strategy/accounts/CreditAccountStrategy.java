@@ -11,6 +11,8 @@ import ru.t1.java.clientregistrationservice.model.Transaction;
 import ru.t1.java.clientregistrationservice.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.service.ClientService;
+import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategy;
+import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,6 +27,7 @@ public class CreditAccountStrategy implements AccountStrategy {
     private final TransactionRepository transactionRepository;
     @Value("${account.limit-for-credit}")
     private double limitCredit;
+    private final TransactionStrategyFactory transactionStrategyFactory;
 
     @Transactional
     @Override
@@ -43,13 +46,7 @@ public class CreditAccountStrategy implements AccountStrategy {
 
     @Override
     public void changeBalance(Account account, Transaction transaction) {
-        if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) < 0) {
-            transaction.cancelTransaction();
-            transactionRepository.saveAndFlush(transaction);
-
-            throw new RuntimeException("Account credit does not have enough money");
-        }
-        account.setBalance(account.getBalance().subtract(transaction.getAmount()));
+        transactionStrategyFactory.getStrategy(transaction.getType()).changeBalance(account, transaction);
         account.checkAndBlockCreditAccount(new BigDecimal(limitCredit));
     }
 
@@ -63,12 +60,6 @@ public class CreditAccountStrategy implements AccountStrategy {
         }
 
         return false;
-    }
-
-    @Override
-    public void adjustmentBalance(Account account, Transaction transaction) {
-        account.setBalance(account.getBalance().add(transaction.getAmount()));
-        accountRepository.saveAndFlush(account);
     }
 
     private void retryFailedTransaction(Account account) {

@@ -1,12 +1,8 @@
-package ru.t1.java.clientregistrationservice.util.strategy.accounts;
+package ru.t1.java.clientregistrationservice.util.strategy.transact;
 
 import ru.t1.java.clientregistrationservice.model.Account;
 import ru.t1.java.clientregistrationservice.model.Transaction;
 
-public interface AccountStrategy {
-    Account create(Account account);
-
+public interface TransactionStrategy {
     void changeBalance(Account account, Transaction transaction);
-
-    boolean unblockAccount(Account account);
 }
