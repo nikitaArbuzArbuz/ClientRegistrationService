@@ -1,7 +1,7 @@
 package ru.t1.java.clientregistrationservice.util.strategy.transact;
 
 import org.springframework.stereotype.Service;
-import ru.t1.java.clientregistrationservice.model.Transaction;
+import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ public class TransactionStrategyFactory {
     private final Map<Transaction.TransactionType, TransactionStrategy> strategies;
 
     public TransactionStrategyFactory(AddTransactionStrategy addTransactionStrategy,
-                                  SubTransactionStrategy subTransactionStrategy,
+                                      SubTransactionStrategy subTransactionStrategy,
                                       CancelTransactionStrategy cancelTransactionStrategy) {
         strategies = new EnumMap<>(Transaction.TransactionType.class);
         strategies.put(Transaction.TransactionType.ADD, addTransactionStrategy);

@@ -1,7 +1,7 @@
 package ru.t1.java.clientregistrationservice.util.strategy.accounts;
 
 import org.springframework.stereotype.Service;
-import ru.t1.java.clientregistrationservice.model.Account;
+import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 
 import java.util.EnumMap;
 import java.util.Map;

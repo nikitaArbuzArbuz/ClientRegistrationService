@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @Slf4j
 public class ClientRegistrationServiceApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(ClientRegistrationServiceApplication.class, args);
     }

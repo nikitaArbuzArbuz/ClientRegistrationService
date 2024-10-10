@@ -1,4 +1,23 @@
 spring:
+  cloud:
+    stream:
+      binders:
+        kafka-loan:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+      bindings:
+        listen-in-0:
+          destination: myTopic
+          group: myFunctionGroup
+    function:
+      definition: listen
+
   application:
     name: ClientRegistrationService
 
@@ -44,18 +63,15 @@ t1:
         fetch:
           bytes: 300000
       poll:
-        records: 1
+        records: 10
         interval:
           ms: 3000
     bootstrap:
       server: localhost:9092
     consumer:
       group-id: t1-bank
-      max.poll.records: 10
     producer:
       enable: true
     topic:
       client_transactions: t1_demo_client_transactions
       client_transaction_errors: t1_demo_client_transaction_errors
-    listener:
-      poll-timeout: 1000

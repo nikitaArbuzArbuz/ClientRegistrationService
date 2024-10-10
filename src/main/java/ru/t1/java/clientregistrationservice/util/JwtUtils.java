@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import ru.t1.java.clientregistrationservice.service.impl.UserDetailsImpl;
+import ru.t1.java.clientregistrationservice.app.service.impl.UserDetailsImpl;
 
 import java.security.Key;
 import java.util.Date;

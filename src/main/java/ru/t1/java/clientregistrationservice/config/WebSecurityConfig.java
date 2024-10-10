@@ -15,7 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.t1.java.clientregistrationservice.service.impl.UserDetailsServiceImpl;
+import ru.t1.java.clientregistrationservice.app.service.impl.UserDetailsServiceImpl;
 import ru.t1.java.clientregistrationservice.util.AuthEntryPointJwt;
 import ru.t1.java.clientregistrationservice.util.AuthTokenFilter;
 import ru.t1.java.clientregistrationservice.util.JwtUtils;
