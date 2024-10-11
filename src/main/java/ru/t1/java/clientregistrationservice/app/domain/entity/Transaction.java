@@ -54,6 +54,10 @@ public class Transaction {
         isCancel = true;
     }
 
+    public void applyTransaction() {
+        isCancel = false;
+    }
+
     public enum TransactionType {
         ADD, SUBTRACT, CANCEL
     }

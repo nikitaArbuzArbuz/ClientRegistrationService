@@ -17,13 +17,13 @@ public class CancelTransactionStrategy implements TransactionStrategy {
     @Override
     @Transactional
     public void changeBalance(Account account, Transaction currentTransaction) {
-        Transaction dbTransaction = transactionRepository.findById(currentTransaction.getId()).orElseThrow(() ->
-                new RuntimeException("Transaction not found"));
+        Transaction dbTransaction = transactionRepository.findLastByAccountId(account.getId())
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
         if (dbTransaction.getType() == Transaction.TransactionType.ADD) {
-            account.setBalance(account.getBalance().subtract(currentTransaction.getAmount()));
+            account.setBalance(account.getBalance().subtract(dbTransaction.getAmount()));
         } else {
-            account.setBalance(account.getBalance().add(currentTransaction.getAmount()));
+            account.setBalance(account.getBalance().add(dbTransaction.getAmount()));
         }
     }
 }

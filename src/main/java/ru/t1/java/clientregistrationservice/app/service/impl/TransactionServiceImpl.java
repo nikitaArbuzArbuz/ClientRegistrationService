@@ -39,19 +39,19 @@ public class TransactionServiceImpl implements TransactionService {
                 Transaction transaction = transactionMapper.map(transactionDto);
                 transaction.setAccount(account);
 
-                transactionRepository.save(transaction);
-                if (account.isBlocked()) {
-                    throw new AccountBlockedException("Account with ID " + account.getId() + " is blocked", transaction.getId());
-                }
-
                 if (!transaction.getType().equals(Transaction.TransactionType.CANCEL)) {
+                    transactionRepository.save(transaction);
+                    if (account.isBlocked()) {
+                        throw new AccountBlockedException("Account with ID " + account.getId() + " is blocked", transaction.getId());
+                    }
+
                     accountStrategyFactory.getStrategy(account.getAccountType())
                             .changeBalance(account, transaction);
                     log.info("Транзакция с id {} прошла", transaction.getId());
 
                     transactionRepository.saveAndFlush(transaction);
                 } else {
-                    cancelTransaction(transaction.getId());
+                    cancelTransaction(transaction);
                 }
 
             } catch (OptimisticLockingFailureException e) {
@@ -68,17 +68,16 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Transactional
     @Override
-    public void cancelTransaction(Long transactionId) {
+    public void cancelTransaction(Transaction transaction) {
+        Account account = transaction.getAccount();
+        Transaction dbTransaction = transactionRepository.findLastByAccountId(account.getId())
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
         try {
-            Transaction transaction = transactionRepository.findById(transactionId)
-                    .orElseThrow(() -> new RuntimeException("Transaction not found"));
-
-            Account account = transaction.getAccount();
             accountStrategyFactory.getStrategy(account.getAccountType()).changeBalance(account, transaction);
-
-            transactionRepository.delete(transaction);
+            transactionRepository.delete(dbTransaction);
+            log.info("Транзакция было отменена и удалена ID {} - {}", dbTransaction.getId(), dbTransaction);
         } catch (OptimisticLockingFailureException e) {
-            log.error("Optimistic locking failure for transaction ID: {}", transactionId, e);
+            log.error("Optimistic locking failure for transaction ID: {}", dbTransaction.getId(), e);
         }
     }
 

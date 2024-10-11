@@ -26,13 +26,4 @@ public class TransactionController {
                         new MessageResponse("Transaction success!").getMessage())
                 .build();
     }
-
-    @PostMapping("/cancel/{transactionId}")
-    public ResponseEntity<?> cancelTransaction(@PathVariable Long transactionId) {
-        transactionService.cancelTransaction(transactionId);
-        return ResponseEntity.ok()
-                .header("Server",
-                        new MessageResponse("Transaction cancelled success!").getMessage())
-                .build();
-    }
 }

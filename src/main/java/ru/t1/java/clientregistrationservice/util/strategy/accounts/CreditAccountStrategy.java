@@ -65,7 +65,9 @@ public class CreditAccountStrategy implements AccountStrategy {
         List<Transaction> failedTransactions = transactionRepository.findByAccountIdAndIsCancelIsTrue(account.getId());
         for (Transaction transaction : failedTransactions) {
             account.setBalance(account.getBalance().add(transaction.getAmount()));
+            transaction.applyTransaction();
             transactionRepository.saveAndFlush(transaction);
+            log.info("Транзакция повторно прошла успешно");
         }
     }
 }
