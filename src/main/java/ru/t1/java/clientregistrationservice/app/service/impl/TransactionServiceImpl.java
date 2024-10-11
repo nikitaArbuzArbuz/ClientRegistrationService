@@ -82,6 +82,6 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void sendTransactionError(Long transactionId) {
-        kafkaTransactProducer.send("t1_demo_client_transaction_errors", transactionId);
+        kafkaTransactProducer.sendTransact(transactionId);
     }
 }

@@ -16,12 +16,14 @@ spring:
           destination: t1_demo_client_transactions
           group: t1_bank
           content-type: application/json
+        sendTransact-out-0:
+          destination: t1_demo_client_transaction_errors
+          content-type: application/json
       kafka:
         binder:
           transaction:
             producer:
               sync: true
-              header-mode: headers
     function:
       definition: listen
 

@@ -11,9 +11,10 @@ import org.springframework.stereotype.Component;
 public class KafkaTransactProducer {
     private final StreamBridge template;
 
-    public void send(String topic, Object o) {
+    public void sendTransact(Long transactionId) {
         try {
-            template.send(topic, o);
+            template.send("sendTransact-out-0", transactionId);
+            log.info("Транзакции отправлены в топик: {}", transactionId);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
