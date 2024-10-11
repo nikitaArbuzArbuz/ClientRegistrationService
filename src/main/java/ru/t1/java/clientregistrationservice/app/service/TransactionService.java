@@ -9,4 +9,8 @@ public interface TransactionService {
     void recordTransaction(List<TransactionDto> transactionDto);
 
     void cancelTransaction(Transaction transaction);
+
+    void deleteTransactionById(Long transactionId);
+
+    void recordTransaction(Long transactionId);
 }

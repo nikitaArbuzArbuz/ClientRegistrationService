@@ -26,9 +26,9 @@ public class AccountController {
                 .body(accountService.createAccount(accountDto));
     }
 
-    @PostMapping("/unblock/{accountId}")
-    public ResponseEntity<String> unblockAccount(@PathVariable Long accountId) {
-        return accountService.unblockAccount(accountId) ?
+    @PostMapping("/unblock/{transactionId}")
+    public ResponseEntity<String> unblockAccount(@PathVariable Long transactionId) {
+        return accountService.unblockAccount(transactionId) ?
                 ResponseEntity.ok("Account unblocked and transaction retried") :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds to unblock credit account");
     }
