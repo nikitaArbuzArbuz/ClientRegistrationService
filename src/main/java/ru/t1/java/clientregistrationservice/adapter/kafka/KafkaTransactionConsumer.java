@@ -17,10 +17,6 @@ public class KafkaTransactionConsumer {
 
     private final TransactionService transactionService;
 
-//    @KafkaListener(id = "${t1.kafka.consumer.group-id}",
-//            topics = "${t1.kafka.topic.client_transactions}",
-//            containerFactory = "kafkaListenerContainerFactory")
-
     @Bean
     Consumer<List<TransactionDto>> listen() {
         return this::listener;

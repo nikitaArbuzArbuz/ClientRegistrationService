@@ -1,4 +1,4 @@
-//package ru.t1.java.clientregistrationservice.config;
+package ru.t1.java.clientregistrationservice.config;
 //
 //import lombok.extern.slf4j.Slf4j;
 //import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -29,8 +29,8 @@
 //
 //@Slf4j
 //@Configuration
-//public class KafkaConfiguration<T> {
-//
+public class KafkaConfiguration<T> {
+
 //    @Value("${t1.kafka.consumer.group-id}")
 //    private String groupId;
 //    @Value("${t1.kafka.bootstrap.server}")
@@ -119,4 +119,4 @@
 //        props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, false);
 //        return new DefaultKafkaProducerFactory<>(props);
 //    }
-//}
+}

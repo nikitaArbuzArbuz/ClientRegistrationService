@@ -13,8 +13,15 @@ spring:
                       brokers: localhost:9092
       bindings:
         listen-in-0:
-          destination: myTopic
-          group: myFunctionGroup
+          destination: t1_demo_client_transactions
+          group: t1_bank
+          content-type: application/json
+      kafka:
+        binder:
+          transaction:
+            producer:
+              sync: true
+              header-mode: headers
     function:
       definition: listen
 
@@ -52,26 +59,26 @@ security:
 account:
   limit-for-credit: 50000.00
 
-t1:
-  scan-path: ru.t1.java.clientregistrationservice
-  kafka:
-    session:
-      timeout:
-        ms: 15000
-    max:
-      partition:
-        fetch:
-          bytes: 300000
-      poll:
-        records: 10
-        interval:
-          ms: 3000
-    bootstrap:
-      server: localhost:9092
-    consumer:
-      group-id: t1-bank
-    producer:
-      enable: true
-    topic:
-      client_transactions: t1_demo_client_transactions
-      client_transaction_errors: t1_demo_client_transaction_errors
+#t1:
+#  scan-path: ru.t1.java.clientregistrationservice
+#  kafka:
+#    session:
+#      timeout:
+#        ms: 15000
+#    max:
+#      partition:
+#        fetch:
+#          bytes: 300000
+#      poll:
+#        records: 10
+#        interval:
+#          ms: 3000
+#    bootstrap:
+#      server: localhost:9092
+#    consumer:
+#      group-id: t1-bank
+#    producer:
+#      enable: true
+#    topic:
+#      client_transactions: t1_demo_client_transactions
+#      client_transaction_errors: t1_demo_client_transaction_errors

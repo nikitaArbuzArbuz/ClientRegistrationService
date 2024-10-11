@@ -2,6 +2,7 @@ package ru.t1.java.clientregistrationservice.app.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.t1.java.clientregistrationservice.app.mapper.AccountMapper;
@@ -25,21 +26,25 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account createAccount(AccountDto accountDto) {
-//        Client client = clientService.getAuthenticatedUser();
-//        Account account = accountMapper.map(accountDto, client);
-//
-//        log.info("Create account {}", account);
-//        log.info("Создание счёта для клиента с login = {}", client.getLogin());
-//
-//        return accountStrategyFactory.getStrategy(account.getAccountType()).create(account);
-        return null;
+        Client client = clientService.getAuthenticatedUser();
+        Account account = accountMapper.map(accountDto, client);
+
+        log.info("Создание счёта {}", account);
+        log.info("Создание счёта для клиента с login = {}", client.getLogin());
+
+        return accountStrategyFactory.getStrategy(account.getAccountType()).create(account);
     }
 
     @Override
     @Transactional
     public boolean unblockAccount(Long accountId) {
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        return accountStrategyFactory.getStrategy(account.getAccountType()).unblockAccount(account);
+        try {
+            Account account = accountRepository.findById(accountId)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+            return accountStrategyFactory.getStrategy(account.getAccountType()).unblockAccount(account);
+        } catch (OptimisticLockingFailureException e) {
+            log.error("Ошибка оптимистической блокировки для accountId: {}", accountId, e);
+            throw new RuntimeException("Регистрация не удалась, попробуйте еще раз", e);
+        }
     }
 }

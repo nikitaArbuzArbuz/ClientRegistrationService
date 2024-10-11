@@ -46,6 +46,10 @@ public class Transaction {
     @Builder.Default
     private boolean isCancel = false;
 
+    @Version
+    @Column(name = "version")
+    private int version;
+
     public void cancelTransaction() {
         isCancel = true;
     }
