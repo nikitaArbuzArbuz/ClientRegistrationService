@@ -51,10 +51,6 @@ public class Client {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Account> accounts;
 
-    @Version
-    @Column(name = "version")
-    private int version;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "client_roles", schema = "bank",
             joinColumns = @JoinColumn(name = "client_id"),

@@ -2,15 +2,16 @@ package ru.t1.java.clientregistrationservice.app.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
-import ru.t1.java.clientregistrationservice.app.mapper.AccountMapper;
+import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
-import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
-import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
+import ru.t1.java.clientregistrationservice.app.mapper.AccountMapper;
 import ru.t1.java.clientregistrationservice.app.service.AccountService;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
@@ -38,15 +39,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
     public boolean unblockAccount(Long transactionId) {
         try {
             Account account = transactionRepository.findById(transactionId)
                     .orElseThrow(() -> new RuntimeException("Account not found")).getAccount();
 
             return accountStrategyFactory.getStrategy(account.getAccountType()).unblockAccount(account);
-        } catch (OptimisticLockingFailureException e) {
-            log.error("Ошибка оптимистической блокировки для transactionId: {}", transactionId, e);
+        } catch (DataAccessException e) {
+            log.error("Ошибка пессимистической блокировки для transactionId: {}", transactionId, e);
             throw new RuntimeException("Регистрация не удалась, попробуйте еще раз", e);
         }
     }

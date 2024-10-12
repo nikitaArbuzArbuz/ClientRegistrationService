@@ -4,12 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
+import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
-import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
-import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
@@ -24,12 +25,12 @@ public class CreditAccountStrategy implements AccountStrategy {
     private final AccountRepository accountRepository;
     private final ClientService clientService;
     private final TransactionRepository transactionRepository;
+    private final TransactionStrategyFactory transactionStrategyFactory;
     @Value("${account.limit-for-credit}")
     private double limitCredit;
-    private final TransactionStrategyFactory transactionStrategyFactory;
 
-    @Transactional
     @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
     public Account create(Account account) {
         Client client = clientService.getAuthenticatedUser();
 

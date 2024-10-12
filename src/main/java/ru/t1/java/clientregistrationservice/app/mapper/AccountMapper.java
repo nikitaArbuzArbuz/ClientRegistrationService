@@ -3,9 +3,9 @@ package ru.t1.java.clientregistrationservice.app.mapper;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
-import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 
 import java.util.UUID;
 
