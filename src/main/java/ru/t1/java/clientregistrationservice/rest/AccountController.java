@@ -32,4 +32,13 @@ public class AccountController {
                 ResponseEntity.ok("Account unblocked and transaction retried") :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds to unblock credit account");
     }
+
+    @PostMapping("/blockDebit/{accountId}")
+    public ResponseEntity<?> blockDebit(@PathVariable Long accountId) {
+        accountService.blockAccount(accountId);
+        return ResponseEntity.ok()
+                .header("Server",
+                        new MessageResponse("Account blocked!").getMessage())
+                .build();
+    }
 }

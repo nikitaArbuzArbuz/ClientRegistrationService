@@ -46,7 +46,7 @@ public class CreditAccountStrategy implements AccountStrategy {
     @Override
     public void changeBalance(Account account, Transaction transaction) {
         transactionStrategyFactory.getStrategy(transaction.getType()).changeBalance(account, transaction);
-        account.checkAndBlockCreditAccount(new BigDecimal(limitCredit));
+        account.checkAndBlockCreditAccount(account.getBalance());
     }
 
     @Override

@@ -108,6 +108,14 @@ public class TransactionServiceImpl implements TransactionService {
         }
     }
 
+    @Override
+    public List<TransactionDto> getCanceledTransactions() {
+        return transactionRepository.findByIsCancel(true)
+                .stream()
+                .map(transactionMapper::map)
+                .toList();
+    }
+
     private void sendTransactionError(Long transactionId) {
         kafkaTransactProducer.sendTransact(transactionId);
     }

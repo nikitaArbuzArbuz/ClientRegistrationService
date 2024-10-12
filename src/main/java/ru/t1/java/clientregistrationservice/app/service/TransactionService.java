@@ -13,4 +13,6 @@ public interface TransactionService {
     void deleteTransactionById(Long transactionId);
 
     void recordTransaction(Long transactionId);
+
+    List<TransactionDto> getCanceledTransactions();
 }

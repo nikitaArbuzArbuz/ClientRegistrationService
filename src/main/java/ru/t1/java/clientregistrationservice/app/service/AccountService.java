@@ -7,4 +7,6 @@ public interface AccountService {
     Account createAccount(AccountDto accountDto);
 
     boolean unblockAccount(Long accountId);
+
+    void blockAccount(Long accountId);
 }

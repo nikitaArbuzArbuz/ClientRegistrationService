@@ -24,6 +24,7 @@ public class AccountServiceImpl implements AccountService {
     private final ClientService clientService;
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
 
     @Override
     public Account createAccount(AccountDto accountDto) {
@@ -48,5 +49,10 @@ public class AccountServiceImpl implements AccountService {
             log.error("Ошибка оптимистической блокировки для transactionId: {}", transactionId, e);
             throw new RuntimeException("Регистрация не удалась, попробуйте еще раз", e);
         }
+    }
+
+    @Override
+    public void blockAccount(Long accountId) {
+        accountRepository.findById(accountId);
     }
 }

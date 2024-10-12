@@ -22,6 +22,13 @@ public abstract class TransactionMapper {
     @Mapping(target = "transactionDate", expression = "java(java.time.LocalDateTime.now())")
     public abstract Transaction map(TransactionDto transactionDto);
 
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "accountId", source = "account.id")
+    @Mapping(target = "amount", source = "amount")
+    @Mapping(target = "description", source = "description")
+    @Mapping(target = "type", source = "type")
+    public abstract TransactionDto map(Transaction transaction);
+
     @IterableMapping(elementTargetType = Transaction.class)
     public abstract List<Transaction> map(List<TransactionDto> transactionDtoList);
 }

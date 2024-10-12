@@ -44,4 +44,12 @@ public class TransactionController {
                         new MessageResponse("Transaction success!").getMessage())
                 .build();
     }
+
+    @GetMapping("/getCanceled")
+    public List<TransactionDto> getCanceledTransactions() {
+        return ResponseEntity.ok()
+                .header("Server",
+                        new MessageResponse("Get transactions success!").getMessage())
+                .body(transactionService.getCanceledTransactions()).getBody();
+    }
 }
