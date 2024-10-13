@@ -16,10 +16,7 @@ import ru.t1.java.clientregistrationservice.app.service.TransactionService;
 import ru.t1.java.clientregistrationservice.util.exceptions.AccountBlockedException;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -84,38 +81,6 @@ public class TransactionServiceImpl implements TransactionService {
         } catch (OptimisticLockingFailureException e) {
             log.error("Optimistic locking failure for transaction ID: {}", dbTransaction.getId(), e);
         }
-    }
-
-    @Override
-    public void deleteTransactionById(Long transactionId) {
-        transactionRepository.deleteById(transactionId);
-    }
-
-    @Override
-    public void recordTransaction(Long transactionId) {
-        Optional<Transaction> existingTransaction = transactionRepository.findById(transactionId);
-
-        if (existingTransaction.isEmpty()) {
-            Transaction newTransaction = Transaction.builder()
-                    .id(transactionId)
-                    .amount(BigDecimal.ZERO)
-                    .description("Create new transaction")
-                    .transactionDate(LocalDateTime.now())
-                    .build();
-            transactionRepository.save(newTransaction);
-
-            log.info("Создание новой транзакции с ID: {}", transactionId);
-        } else {
-            log.info("Транзакция с ID {} уже существует", transactionId);
-        }
-    }
-
-    @Override
-    public List<TransactionDto> getCanceledTransactions() {
-        return transactionRepository.findByIsCancel(true)
-                .stream()
-                .map(transactionMapper::map)
-                .toList();
     }
 
     private void sendTransactionError(Long transactionId) {

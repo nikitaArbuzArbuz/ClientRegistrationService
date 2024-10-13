@@ -60,10 +60,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/signin").permitAll()
-                                .requestMatchers("/api/account/*").permitAll()
                                 .requestMatchers("/api/auth/signup").permitAll()
-                                .requestMatchers("/api/transact/delete").permitAll()
-                                .requestMatchers("/api/transact/newById").permitAll()
+                                .requestMatchers("/api/account/unblock/**", "/api/account/blockDebit").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 );

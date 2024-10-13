@@ -5,11 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
+import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
-import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
-import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
@@ -24,9 +24,9 @@ public class CreditAccountStrategy implements AccountStrategy {
     private final AccountRepository accountRepository;
     private final ClientService clientService;
     private final TransactionRepository transactionRepository;
+    private final TransactionStrategyFactory transactionStrategyFactory;
     @Value("${account.limit-for-credit}")
     private double limitCredit;
-    private final TransactionStrategyFactory transactionStrategyFactory;
 
     @Transactional
     @Override
@@ -50,17 +50,13 @@ public class CreditAccountStrategy implements AccountStrategy {
     }
 
     @Override
-    public boolean unblockAccount(Account account, Transaction transaction) {
-        if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) >= 0 &&
-                transaction.getType().equals(Transaction.TransactionType.SUBTRACT)) {
+    public void unblockAccount(Account account, Transaction transaction) {
+        if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) >= 0 ||
+                transaction.getType().equals(Transaction.TransactionType.ADD)) {
             account.unblockAccount();
             accountRepository.saveAndFlush(account);
             retryFailedTransaction(account);
-
-            return true;
         }
-
-        return false;
     }
 
     private void retryFailedTransaction(Account account) {

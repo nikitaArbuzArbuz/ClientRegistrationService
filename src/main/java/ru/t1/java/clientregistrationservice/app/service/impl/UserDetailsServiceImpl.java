@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
 import ru.t1.java.clientregistrationservice.adapter.repository.ClientRepository;
+import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
 
 @Service
 @RequiredArgsConstructor

@@ -5,14 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
+import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
-import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
-import ru.t1.java.clientregistrationservice.app.mapper.AccountMapper;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
-import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
-import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
+import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
+import ru.t1.java.clientregistrationservice.app.mapper.AccountMapper;
 import ru.t1.java.clientregistrationservice.app.mapper.TransactionMapper;
 import ru.t1.java.clientregistrationservice.app.service.AccountService;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
@@ -59,7 +59,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public void blockAccount(Long accountId) {
-        accountRepository.findById(accountId);
+        Account account = accountRepository.findById(accountId).orElseThrow(() ->
+                new RuntimeException("Account not found"));
+        account.blockAccount();
+        accountRepository.save(account);
+    }
+
+    @Override
+    public boolean existBlockedAccountByTransactionId(Long transactionId) {
+        return transactionRepository.findById(transactionId).orElseThrow(() ->
+                new RuntimeException("Transaction not found!")).getAccount().isBlocked();
     }
 }

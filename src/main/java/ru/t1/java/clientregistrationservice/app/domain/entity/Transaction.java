@@ -58,6 +58,15 @@ public class Transaction {
         isCancel = false;
     }
 
+    public Transaction create(Long transactionId) {
+        return Transaction.builder()
+                .id(transactionId)
+                .amount(BigDecimal.ZERO)
+                .description("Create new transaction")
+                .transactionDate(LocalDateTime.now())
+                .build();
+    }
+
     public enum TransactionType {
         ADD, SUBTRACT, CANCEL
     }

@@ -8,5 +8,5 @@ public interface AccountStrategy {
 
     void changeBalance(Account account, Transaction transaction);
 
-    boolean unblockAccount(Account account, Transaction transaction);
+    void unblockAccount(Account account, Transaction transaction);
 }

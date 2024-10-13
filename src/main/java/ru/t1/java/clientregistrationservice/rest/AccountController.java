@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 import ru.t1.java.clientregistrationservice.app.domain.dto.MessageResponse;
 import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
@@ -19,7 +18,6 @@ import ru.t1.java.clientregistrationservice.app.service.AccountService;
 public class AccountController {
 
     private final AccountService accountService;
-    private final TransactionRepository transactionRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createAccount(@RequestBody AccountDto accountDto) {
@@ -30,16 +28,14 @@ public class AccountController {
     }
 
     @PostMapping("/unblock/{transactionId}")
-    public ResponseEntity<TransactionDto> unblockAccount(@PathVariable Long transactionId) {
+    public ResponseEntity<?> unblockAccount(@PathVariable Long transactionId) {
         TransactionDto transactionDto = accountService.unblockAccount(transactionId);
-        if (transactionRepository.findById(transactionId).get().getAccount().isBlocked()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
+        if (accountService.existBlockedAccountByTransactionId(transactionId)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(transactionDto);
         }
         return ResponseEntity.ok()
-                        .header("Server",
-                                new MessageResponse("Account unblocked!").getMessage())
-                        .body(transactionDto);
+                .body(transactionDto);
     }
 
     @PostMapping("/blockDebit/{accountId}")

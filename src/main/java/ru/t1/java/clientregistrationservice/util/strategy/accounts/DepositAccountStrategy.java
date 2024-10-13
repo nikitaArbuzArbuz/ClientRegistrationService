@@ -3,10 +3,10 @@ package ru.t1.java.clientregistrationservice.util.strategy.accounts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
-import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.transact.TransactionStrategyFactory;
 
@@ -36,9 +36,8 @@ public class DepositAccountStrategy implements AccountStrategy {
     }
 
     @Override
-    public boolean unblockAccount(Account account, Transaction transaction) {
+    public void unblockAccount(Account account, Transaction transaction) {
         account.unblockAccount();
         accountRepository.saveAndFlush(account);
-        return true;
     }
 }
