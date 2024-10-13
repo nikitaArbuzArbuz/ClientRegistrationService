@@ -48,6 +48,10 @@ public class Account {
     @ToString.Exclude
     private Set<Transaction> transactions;
 
+    @Version
+    @Column(name = "version")
+    private int version;
+
     public void blockAccount() {
         this.isBlocked = true;
     }

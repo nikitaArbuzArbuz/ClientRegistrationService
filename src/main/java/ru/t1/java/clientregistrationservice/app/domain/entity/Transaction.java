@@ -46,21 +46,16 @@ public class Transaction {
     @Builder.Default
     private boolean isCancel = false;
 
+    @Version
+    @Column(name = "version")
+    private int version;
+
     public void cancelTransaction() {
         isCancel = true;
     }
 
     public void applyTransaction() {
         isCancel = false;
-    }
-
-    public Transaction create(Long id) {
-        return Transaction.builder()
-                .id(id)
-                .amount(BigDecimal.ZERO)
-                .description("Create new transaction")
-                .transactionDate(LocalDateTime.now())
-                .build();
     }
 
     public enum TransactionType {

@@ -42,3 +42,13 @@ databaseChangeLog:
         - sqlFile:
             path: 004-020009102024-insert-roles.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 005-130911102024-add-versions
+      author: Nikita Pushkin
+      comment: Add column versions to tables
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: 005-130911102024-add-versions.sql
+            relativeToChangelogFile: true

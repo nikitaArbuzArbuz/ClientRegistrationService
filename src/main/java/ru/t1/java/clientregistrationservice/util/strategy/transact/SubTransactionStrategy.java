@@ -2,11 +2,9 @@ package ru.t1.java.clientregistrationservice.util.strategy.transact;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
-import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
+import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 
@@ -16,7 +14,6 @@ public class SubTransactionStrategy implements TransactionStrategy {
     private final TransactionRepository transactionRepository;
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
     public void changeBalance(Account account, Transaction transaction) {
         if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) < 0) {
             transaction.cancelTransaction();

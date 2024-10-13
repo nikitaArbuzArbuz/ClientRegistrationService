@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.t1.java.clientregistrationservice.app.domain.dto.ClientDto;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Client;
+import ru.t1.java.clientregistrationservice.app.domain.dto.ClientDto;
 
 @Mapper(componentModel = "spring")
 @Slf4j

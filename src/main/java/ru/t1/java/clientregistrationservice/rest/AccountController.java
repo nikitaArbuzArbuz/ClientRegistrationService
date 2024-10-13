@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1.java.clientregistrationservice.app.domain.dto.AccountDto;
 import ru.t1.java.clientregistrationservice.app.domain.dto.MessageResponse;
+import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
 import ru.t1.java.clientregistrationservice.app.service.AccountService;
 
 @Slf4j
@@ -27,10 +28,11 @@ public class AccountController {
     }
 
     @PostMapping("/unblock/{transactionId}")
-    public ResponseEntity<String> unblockAccount(@PathVariable Long transactionId) {
-        return accountService.unblockAccount(transactionId) ?
-                ResponseEntity.ok("Account unblocked and transaction retried") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient funds to unblock credit account");
+    public ResponseEntity<TransactionDto> unblockAccount(@PathVariable Long transactionId) {
+        return ResponseEntity.ok()
+                        .header("Server",
+                                new MessageResponse("Account unblocked!").getMessage())
+                        .body(accountService.unblockAccount(transactionId));
     }
 
     @PostMapping("/blockDebit/{accountId}")

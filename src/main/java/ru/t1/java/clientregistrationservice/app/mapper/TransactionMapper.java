@@ -6,8 +6,8 @@ import org.mapstruct.BeanMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
+import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
 
 import java.util.List;
 

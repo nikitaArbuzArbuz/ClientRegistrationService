@@ -2,9 +2,8 @@ package ru.t1.java.clientregistrationservice.app.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.t1.java.clientregistrationservice.adapter.kafka.KafkaTransactProducer;
 import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
@@ -17,7 +16,10 @@ import ru.t1.java.clientregistrationservice.app.service.TransactionService;
 import ru.t1.java.clientregistrationservice.util.exceptions.AccountBlockedException;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionMapper transactionMapper;
 
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
+    @Transactional
     @Override
     public void recordTransaction(List<TransactionDto> transactionDtoList) {
         transactionDtoList.forEach(transactionDto -> {
@@ -42,12 +44,12 @@ public class TransactionServiceImpl implements TransactionService {
 
                 if (!transaction.getType().equals(Transaction.TransactionType.CANCEL)) {
                     transactionRepository.save(transaction);
+
                     if (account.isBlocked()) {
+                        transaction.cancelTransaction();
+                        transactionRepository.saveAndFlush(transaction);
                         throw new AccountBlockedException("Account with ID " + account.getId() + " is blocked", transaction.getId());
                     }
-
-                    accountStrategyFactory.getStrategy(account.getAccountType())
-                            .changeBalance(account, transaction);
                     log.info("Транзакция с id {} прошла", transaction.getId());
 
                     transactionRepository.saveAndFlush(transaction);
@@ -55,8 +57,8 @@ public class TransactionServiceImpl implements TransactionService {
                     cancelTransaction(transaction);
                 }
 
-            } catch (DataAccessException e) {
-                log.error("Pessimistic locking failure for transactionDto: {}", transactionDto, e);
+            } catch (OptimisticLockingFailureException e) {
+                log.error("Optimistic locking failure for transactionDto: {}", transactionDto, e);
             } catch (AccountBlockedException e) {
                 log.error("Account is blocked for transactionDto: {} ID", e.getAccountId(), e);
                 sendTransactionError(e.getAccountId());
@@ -64,9 +66,10 @@ public class TransactionServiceImpl implements TransactionService {
                 log.error("Failed to process transactionDto: {}", transactionDto, e);
             }
         });
+
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
+    @Transactional
     @Override
     public void cancelTransaction(Transaction transaction) {
         Account account = transaction.getAccount();
@@ -76,8 +79,8 @@ public class TransactionServiceImpl implements TransactionService {
             accountStrategyFactory.getStrategy(account.getAccountType()).changeBalance(account, transaction);
             transactionRepository.delete(dbTransaction);
             log.info("Транзакция было отменена и удалена ID {} - {}", dbTransaction.getId(), dbTransaction);
-        } catch (DataAccessException e) {
-            log.error("Pessimistic locking failure for transaction ID: {}", dbTransaction.getId(), e);
+        } catch (OptimisticLockingFailureException e) {
+            log.error("Optimistic locking failure for transaction ID: {}", dbTransaction.getId(), e);
         }
     }
 
@@ -87,10 +90,17 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    @Transactional
     public void recordTransaction(Long transactionId) {
-        if (transactionRepository.findById(transactionId).isEmpty()) {
-            transactionRepository.save(new Transaction().create(transactionId));
+        Optional<Transaction> existingTransaction = transactionRepository.findById(transactionId);
+
+        if (existingTransaction.isEmpty()) {
+            Transaction newTransaction = Transaction.builder()
+                    .id(transactionId)
+                    .amount(BigDecimal.ZERO)
+                    .description("Create new transaction")
+                    .transactionDate(LocalDateTime.now())
+                    .build();
+            transactionRepository.save(newTransaction);
 
             log.info("Создание новой транзакции с ID: {}", transactionId);
         } else {
