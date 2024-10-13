@@ -29,10 +29,11 @@ public class AccountController {
 
     @PostMapping("/unblock/{transactionId}")
     public ResponseEntity<TransactionDto> unblockAccount(@PathVariable Long transactionId) {
+        TransactionDto transactionDto = accountService.unblockAccount(transactionId);
         return ResponseEntity.ok()
                         .header("Server",
                                 new MessageResponse("Account unblocked!").getMessage())
-                        .body(accountService.unblockAccount(transactionId));
+                        .body(transactionDto);
     }
 
     @PostMapping("/blockDebit/{accountId}")

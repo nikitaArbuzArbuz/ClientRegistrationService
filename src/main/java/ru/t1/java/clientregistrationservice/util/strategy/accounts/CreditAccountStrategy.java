@@ -51,7 +51,8 @@ public class CreditAccountStrategy implements AccountStrategy {
 
     @Override
     public boolean unblockAccount(Account account, Transaction transaction) {
-        if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) >= 0) {
+        if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) >= 0 &&
+                transaction.getType().equals(Transaction.TransactionType.SUBTRACT)) {
             account.unblockAccount();
             accountRepository.saveAndFlush(account);
             retryFailedTransaction(account);

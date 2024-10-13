@@ -50,6 +50,8 @@ public class TransactionServiceImpl implements TransactionService {
                         transactionRepository.saveAndFlush(transaction);
                         throw new AccountBlockedException("Account with ID " + account.getId() + " is blocked", transaction.getId());
                     }
+
+                    accountStrategyFactory.getStrategy(account.getAccountType()).changeBalance(account, transaction);
                     log.info("Транзакция с id {} прошла", transaction.getId());
 
                     transactionRepository.saveAndFlush(transaction);

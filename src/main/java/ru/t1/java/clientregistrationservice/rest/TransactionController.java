@@ -26,4 +26,30 @@ public class TransactionController {
                         new MessageResponse("Transaction success!").getMessage())
                 .build();
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> deleteTransaction(@RequestBody Long transactionId) {
+        transactionService.deleteTransactionById(transactionId);
+        return ResponseEntity.ok()
+                .header("Server",
+                        new MessageResponse("Transaction deleted!").getMessage())
+                .build();
+    }
+
+    @PostMapping("/newById")
+    public ResponseEntity<?> createTransactionById(@RequestBody Long transactionId) {
+        transactionService.recordTransaction(transactionId);
+        return ResponseEntity.ok()
+                .header("Server",
+                        new MessageResponse("Transaction success!").getMessage())
+                .build();
+    }
+
+    @GetMapping("/getCanceled")
+    public List<TransactionDto> getCanceledTransactions() {
+        return ResponseEntity.ok()
+                .header("Server",
+                        new MessageResponse("Get transactions success!").getMessage())
+                .body(transactionService.getCanceledTransactions()).getBody();
+    }
 }
