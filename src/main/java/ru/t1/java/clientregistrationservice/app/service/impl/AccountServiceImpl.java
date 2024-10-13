@@ -49,11 +49,9 @@ public class AccountServiceImpl implements AccountService {
                     .orElseThrow(() -> new RuntimeException("Account not found"));
             Account account = transaction.getAccount();
 
-            if (accountStrategyFactory.getStrategy(account.getAccountType()).unblockAccount(account, transaction)) {
-                return transactionMapper.map(transaction);
-            }
+            accountStrategyFactory.getStrategy(account.getAccountType()).unblockAccount(account, transaction);
+            return transactionMapper.map(transaction);
 
-            throw new OptimisticLockingFailureException("Ошибка оптимистической блокировки");
         } catch (OptimisticLockingFailureException e) {
             log.error("Ошибка оптимистической блокировки для transactionId: {}", transactionId, e);
             throw new RuntimeException("Регистрация не удалась, попробуйте еще раз", e);
