@@ -22,6 +22,6 @@ public class ClientServiceImpl implements ClientService {
         String login = authUser.getName();
         log.info("Получаем объект залогиненного пользователя c login: {}", login);
         return clientRepository.findByLogin(login).orElseThrow(() ->
-                new UsernameNotFoundException("Пользователь не найден"));
+                new UsernameNotFoundException("User not found!"));
     }
 }

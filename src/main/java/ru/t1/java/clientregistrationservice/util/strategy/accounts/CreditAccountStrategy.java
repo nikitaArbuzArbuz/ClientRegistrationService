@@ -39,7 +39,7 @@ public class CreditAccountStrategy implements AccountStrategy {
         }
 
         account.setBalance(new BigDecimal(limitCredit));
-
+        log.info("Creating credit account ID: {}", account.getId());
         return accountRepository.saveAndFlush(account);
     }
 
@@ -47,6 +47,7 @@ public class CreditAccountStrategy implements AccountStrategy {
     public void changeBalance(Account account, Transaction transaction) {
         transactionStrategyFactory.getStrategy(transaction.getType()).changeBalance(account, transaction);
         account.checkAndBlockCreditAccount(account.getBalance());
+        log.info("Changing credit account ID: {}", account.getId());
     }
 
     @Override
@@ -54,6 +55,7 @@ public class CreditAccountStrategy implements AccountStrategy {
         if (account.getBalance().subtract(transaction.getAmount()).compareTo(BigDecimal.ZERO) >= 0 ||
                 transaction.getType().equals(Transaction.TransactionType.ADD)) {
             account.unblockAccount();
+            log.info("Unblocking account ID: {}", account.getId());
             accountRepository.saveAndFlush(account);
             retryFailedTransaction(account);
         }

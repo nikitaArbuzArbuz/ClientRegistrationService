@@ -57,12 +57,12 @@ public class TransactionServiceImpl implements TransactionService {
                 }
 
             } catch (OptimisticLockingFailureException e) {
-                log.error("Optimistic locking failure for transactionDto: {}", transactionDto, e);
+                log.error("Оптимистичный отказ блокировки для transactionDto: {}", transactionDto, e);
             } catch (AccountBlockedException e) {
-                log.error("Account is blocked for transactionDto: {} ID", e.getAccountId(), e);
+                log.error("Аккаунт заблокирован для transactionDto: {} ID", e.getAccountId(), e);
                 sendTransactionError(e.getAccountId());
             } catch (Exception e) {
-                log.error("Failed to process transactionDto: {}", transactionDto, e);
+                log.error("Ошибка в обработке transactionDto: {}", transactionDto, e);
             }
         });
 
@@ -79,7 +79,7 @@ public class TransactionServiceImpl implements TransactionService {
             transactionRepository.delete(dbTransaction);
             log.info("Транзакция было отменена и удалена ID {} - {}", dbTransaction.getId(), dbTransaction);
         } catch (OptimisticLockingFailureException e) {
-            log.error("Optimistic locking failure for transaction ID: {}", dbTransaction.getId(), e);
+            log.error("Ошибка оптимистичной блокировки для транзакции ID: {}", dbTransaction.getId(), e);
         }
     }
 

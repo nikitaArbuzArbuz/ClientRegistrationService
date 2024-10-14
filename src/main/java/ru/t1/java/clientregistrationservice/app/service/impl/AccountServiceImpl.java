@@ -64,6 +64,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(() ->
                 new RuntimeException("Account not found"));
         account.blockAccount();
+        log.info("Аккаунт заблокирован ID: {}" , accountId);
         accountRepository.save(account);
     }
 
