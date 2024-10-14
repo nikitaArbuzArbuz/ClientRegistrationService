@@ -49,10 +49,15 @@ spring:
 
 logging:
   level:
-    ROOT: DEBUG
-    ru.t1.java.demo.controller.AuthController: DEBUG
-    org.apache.kafka: INFO
-    org.hibernate.SQL: INFO
+    level:
+      ROOT: DEBUG
+      ru.t1.java: DEBUG
+      org.apache.kafka: INFO
+      org.hibernate.SQL: INFO
+  file:
+    name: logs/logs.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} [%M] - %msg%n"
 
 security:
   token: tstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5h
