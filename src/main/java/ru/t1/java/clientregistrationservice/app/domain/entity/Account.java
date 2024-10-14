@@ -33,6 +33,7 @@ public class Account {
     private Client client;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "account_type")
     private AccountType accountType;
 
     @Column(name = "balance", precision = 19, scale = 2)

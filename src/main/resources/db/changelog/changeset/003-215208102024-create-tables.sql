@@ -21,8 +21,8 @@ CREATE TABLE bank.accounts
     account_number VARCHAR(255),
     client_id      BIGINT,
     account_type   VARCHAR(20),
-    balance        DECIMAL(19, 2),
-    is_blocked     BOOLEAN,
+    balance        DECIMAL(19, 2) DEFAULT 0.00 CHECK (balance >= 0),
+    is_blocked     BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (client_id) REFERENCES bank.clients (id) ON DELETE CASCADE
 );
 
@@ -30,10 +30,10 @@ CREATE TABLE bank.transactions
 (
     id               BIGINT NOT NULL PRIMARY KEY,
     account_id       BIGINT,
-    amount           DECIMAL(19, 2),
+    amount           DECIMAL(19, 2) CHECK (amount >= 0),
     transaction_date TIMESTAMP,
     description      VARCHAR(255),
-    is_cancel        BOOLEAN,
+    is_cancel        BOOLEAN DEFAULT FALSE,
     type             VARCHAR(25),
     FOREIGN KEY (account_id) REFERENCES bank.accounts (id) ON DELETE CASCADE
 );
