@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 import ru.t1.java.clientregistrationservice.adapter.kafka.KafkaTransactProducer;
 import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;
@@ -27,12 +28,23 @@ public class TransactionServiceImpl implements TransactionService {
     private final KafkaTransactProducer kafkaTransactProducer;
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionMapper transactionMapper;
+    private final WebClient webClient;
 
     @Transactional
     @Override
     public void recordTransaction(List<TransactionDto> transactionDtoList) {
         transactionDtoList.forEach(transactionDto -> {
             try {
+                boolean isTransactionAllowed = Boolean.TRUE.equals(webClient.post()
+                        .uri("/approveTransaction")
+                        .bodyValue(transactionDto)
+                        .retrieve()
+                        .bodyToMono(Boolean.class)
+                        .block());
+
+                if (!isTransactionAllowed) {
+                    throw new RuntimeException("Transaction not allowed");
+                }
                 Account account = accountRepository.findById(transactionDto.getAccountId())
                         .orElseThrow(() -> new RuntimeException("Account not found"));
 

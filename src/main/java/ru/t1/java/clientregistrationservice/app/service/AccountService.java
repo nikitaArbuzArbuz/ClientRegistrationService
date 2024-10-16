@@ -12,6 +12,4 @@ public interface AccountService {
     void blockAccount(Long accountId);
 
     boolean existBlockedAccountByTransactionId(Long transactionId);
-
-    TransactionDto unblock(Long transactionId);
 }
