@@ -17,6 +17,12 @@ import ru.t1.java.clientregistrationservice.app.mapper.TransactionMapper;
 import ru.t1.java.clientregistrationservice.app.service.AccountService;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
+import ru.t1.java.clientregistrationservice.web.CheckResponse;
+import ru.t1.java.clientregistrationservice.web.CheckWebClient;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,6 +35,7 @@ public class AccountServiceImpl implements AccountService {
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final CheckWebClient checkWebClient;
 
     @Override
     public Account createAccount(AccountDto accountDto) {
@@ -64,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(() ->
                 new RuntimeException("Account not found"));
         account.blockAccount();
-        log.info("Аккаунт заблокирован ID: {}" , accountId);
+        log.info("Аккаунт заблокирован ID: {}", accountId);
         accountRepository.save(account);
     }
 
@@ -72,5 +79,21 @@ public class AccountServiceImpl implements AccountService {
     public boolean existBlockedAccountByTransactionId(Long transactionId) {
         return transactionRepository.findById(transactionId).orElseThrow(() ->
                 new RuntimeException("Transaction not found!")).getAccount().isBlocked();
+    }
+
+    @Override
+    @Transactional
+    public TransactionDto unblock(Long transactionId) {
+        var context = new Object() {
+            TransactionDto transactionDto = new TransactionDto();
+        };
+        Optional<CheckResponse> check = checkWebClient.check(transactionId);
+        check.ifPresent(checkResponse -> {
+            if (!checkResponse.getBlocked()) {
+               context.transactionDto = unblockAccount(transactionId);
+            }
+        });
+
+        return context.transactionDto;
     }
 }

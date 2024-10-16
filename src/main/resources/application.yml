@@ -66,26 +66,8 @@ security:
 account:
   limit-for-credit: 50000.00
 
-#t1:
-#  scan-path: ru.t1.java.clientregistrationservice
-#  kafka:
-#    session:
-#      timeout:
-#        ms: 15000
-#    max:
-#      partition:
-#        fetch:
-#          bytes: 300000
-#      poll:
-#        records: 10
-#        interval:
-#          ms: 3000
-#    bootstrap:
-#      server: localhost:9092
-#    consumer:
-#      group-id: t1-bank
-#    producer:
-#      enable: true
-#    topic:
-#      client_transactions: t1_demo_client_transactions
-#      client_transaction_errors: t1_demo_client_transaction_errors
+integration:
+  url: http://localhost:8085
+  resource: /bsc-wire-mock/api/account/unblock
+  retry-count: 3
+  retry-backoff: 1000
