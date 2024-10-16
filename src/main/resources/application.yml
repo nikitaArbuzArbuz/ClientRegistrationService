@@ -1,31 +1,91 @@
 spring:
-    application:
-        name: ClientRegistrationService
+  cloud:
+    stream:
+      binders:
+        kafka-loan:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: localhost:9092
+      bindings:
+        listen-in-0:
+          destination: t1_demo_client_transactions
+          group: t1_bank
+          content-type: application/json
+        sendTransact-out-0:
+          destination: t1_demo_client_transaction_errors
+          content-type: application/json
+      kafka:
+        binder:
+          transaction:
+            producer:
+              sync: true
+    function:
+      definition: listen
 
-    datasource:
-        url: jdbc:postgresql://localhost:5433/t1_bank_demo
-        username: postgres
-        password: "0000"
-        driverClassName: org.postgresql.Driver
-    liquibase:
-        enabled: true
-        change-log: db/changelog/master-changelog.yaml
-        driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5433/t1_bank_demo
-        user: postgres
-        password: "0000"
-    jpa:
-        open-in-view: false
-        hibernate:
-            ddl-auto: validate
+  application:
+    name: ClientRegistrationService
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/t1_bank_demo
+    username: postgres
+    password: "0000"
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: db/changelog/master-changelog.yaml
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/t1_bank_demo
+    user: postgres
+    password: "0000"
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
 
 logging:
+  level:
     level:
-        ROOT: DEBUG
-        ru.t1.java.demo.controller.ClientController: DEBUG
-        org.apache.kafka: INFO
-        org.hibernate.SQL: INFO
+      ROOT: DEBUG
+      ru.t1.java: DEBUG
+      org.apache.kafka: INFO
+      org.hibernate.SQL: INFO
+  file:
+    name: logs/logs.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} [%M] - %msg%n"
 
 security:
-    token: tstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5h
-    expiration: 86400000
+  token: tstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5htstrs4g434wyhser5h
+  expiration: 86400000
+
+account:
+  limit-for-credit: 50000.00
+
+#t1:
+#  scan-path: ru.t1.java.clientregistrationservice
+#  kafka:
+#    session:
+#      timeout:
+#        ms: 15000
+#    max:
+#      partition:
+#        fetch:
+#          bytes: 300000
+#      poll:
+#        records: 10
+#        interval:
+#          ms: 3000
+#    bootstrap:
+#      server: localhost:9092
+#    consumer:
+#      group-id: t1-bank
+#    producer:
+#      enable: true
+#    topic:
+#      client_transactions: t1_demo_client_transactions
+#      client_transaction_errors: t1_demo_client_transaction_errors
