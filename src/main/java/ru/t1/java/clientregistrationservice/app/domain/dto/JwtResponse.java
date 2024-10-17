@@ -1,5 +1,6 @@
 package ru.t1.java.clientregistrationservice.app.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
