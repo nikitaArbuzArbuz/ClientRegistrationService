@@ -15,14 +15,14 @@ public class WebClientConfig {
     @Bean
     public WebClient webClient(WebClient.Builder builder) {
         return builder
-                .baseUrl("http://localhost:8089")
+                .baseUrl("http://localhost:8080")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
 
     @Bean
     public WireMockServer wireMockServer() {
-        WireMockServer wireMockServer = new WireMockServer();
+        WireMockServer wireMockServer = new WireMockServer(8080);
         wireMockServer.start();
 
         wireMockServer.stubFor(post(urlEqualTo("/approveTransaction"))
