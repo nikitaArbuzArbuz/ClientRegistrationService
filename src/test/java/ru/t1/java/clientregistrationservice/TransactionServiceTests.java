@@ -14,6 +14,7 @@ import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
 import ru.t1.java.clientregistrationservice.app.mapper.TransactionMapper;
+import ru.t1.java.clientregistrationservice.app.service.WireMockService;
 import ru.t1.java.clientregistrationservice.app.service.impl.TransactionServiceImpl;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategy;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
@@ -28,6 +29,9 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TransactionServiceTests {
+
+    @Mock
+    private WireMockService wireMockService;
 
     @Mock
     private TransactionRepository transactionRepository;
@@ -75,6 +79,7 @@ public class TransactionServiceTests {
     void recordTransactionShouldSaveTransactionWhenAccountIsNotBlocked() {
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(transactionMapper.map(transactionDto)).thenReturn(transaction);
+        doReturn(true).when(wireMockService).transactionPlug(any(TransactionDto.class));
 
         transactionService.recordTransaction(Collections.singletonList(transactionDto));
 
@@ -87,6 +92,7 @@ public class TransactionServiceTests {
         account.setBlocked(true);
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(transactionMapper.map(transactionDto)).thenReturn(transaction);
+        doReturn(true).when(wireMockService).transactionPlug(any(TransactionDto.class));
 
         transactionService.recordTransaction(Collections.singletonList(transactionDto));
 
@@ -119,6 +125,7 @@ public class TransactionServiceTests {
     void recordTransactionShouldHandleOptimisticLockingException() {
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(transactionMapper.map(transactionDto)).thenReturn(transaction);
+        doReturn(true).when(wireMockService).transactionPlug(any(TransactionDto.class));
 
         doThrow(OptimisticLockingFailureException.class).when(transactionRepository).save(any());
 

@@ -14,6 +14,7 @@ import ru.t1.java.clientregistrationservice.app.domain.entity.Account;
 import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
 import ru.t1.java.clientregistrationservice.app.mapper.TransactionMapper;
 import ru.t1.java.clientregistrationservice.app.service.TransactionService;
+import ru.t1.java.clientregistrationservice.app.service.WireMockService;
 import ru.t1.java.clientregistrationservice.util.exceptions.AccountBlockedException;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
 
@@ -28,23 +29,17 @@ public class TransactionServiceImpl implements TransactionService {
     private final KafkaTransactProducer kafkaTransactProducer;
     private final AccountStrategyFactory accountStrategyFactory;
     private final TransactionMapper transactionMapper;
-    private final WebClient webClient;
+    private final WireMockService wireMockService;
 
     @Transactional
     @Override
     public void recordTransaction(List<TransactionDto> transactionDtoList) {
         transactionDtoList.forEach(transactionDto -> {
             try {
-                boolean isTransactionAllowed = Boolean.TRUE.equals(webClient.post()
-                        .uri("/approveTransaction")
-                        .bodyValue(transactionDto)
-                        .retrieve()
-                        .bodyToMono(Boolean.class)
-                        .block());
-
-                if (!isTransactionAllowed) {
+                if (!wireMockService.transactionPlug(transactionDto)) {
                     throw new RuntimeException("Transaction not allowed");
                 }
+
                 Account account = accountRepository.findById(transactionDto.getAccountId())
                         .orElseThrow(() -> new RuntimeException("Account not found"));
 
