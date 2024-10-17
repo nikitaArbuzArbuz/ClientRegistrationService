@@ -27,7 +27,7 @@ public class WebClientConfig {
         wireMockServer.stubFor(post(urlEqualTo("/approveTransaction"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
-                        .withBody("{\"approved\": true}")
+                        .withBody("{\"blocked\": true}")
                         .withStatus(200)));
 
         return wireMockServer;

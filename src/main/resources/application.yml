@@ -65,3 +65,9 @@ security:
 
 account:
   limit-for-credit: 50000.00
+
+integration:
+  url: http://localhost:8080
+  resource: /approveTransaction
+  retry-count: 3
+  retry-backoff: 1000

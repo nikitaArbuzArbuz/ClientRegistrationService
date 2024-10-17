@@ -59,13 +59,8 @@ public class TransactionServiceWireMockTests {
 
     @Test
     public void testTransactionApproval() throws Exception {
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlEqualTo("/approveTransaction"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("true")
-                        .withStatus(200)));
 
-        String transactionJson = "{\"accountId\": 1, \"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
+        String transactionJson = "{\"accountId\": " + account.getId() + ", \"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
 
         mockMvc.perform(post("/api/transact/new")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -83,12 +78,6 @@ public class TransactionServiceWireMockTests {
     public void testTransactionApprovalShouldFailWhenAccountIsBlocked() throws Exception {
         account.setBlocked(true);
         accountRepository.save(account);
-
-        stubFor(com.github.tomakehurst.wiremock.client.WireMock.post(urlEqualTo("/approveTransaction"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("true")
-                        .withStatus(200)));
 
         String transactionJson = "{\"accountId\": " + account.getId() + ", \"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
 
