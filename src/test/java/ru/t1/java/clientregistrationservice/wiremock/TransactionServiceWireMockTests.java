@@ -1,4 +1,4 @@
-package ru.t1.java.clientregistrationservice;
+package ru.t1.java.clientregistrationservice.wiremock;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import ru.t1.java.clientregistrationservice.app.domain.entity.Transaction;
 
 import java.math.BigDecimal;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.resetAllRequests;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -60,7 +60,8 @@ public class TransactionServiceWireMockTests {
     @Test
     public void testTransactionApproval() throws Exception {
 
-        String transactionJson = "{\"accountId\": " + account.getId() + ", \"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
+        String transactionJson = "{\"accountId\": " + account.getId() + ", " +
+                "\"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
 
         mockMvc.perform(post("/api/transact/new")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +80,8 @@ public class TransactionServiceWireMockTests {
         account.setBlocked(true);
         accountRepository.save(account);
 
-        String transactionJson = "{\"accountId\": " + account.getId() + ", \"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
+        String transactionJson = "{\"accountId\": " + account.getId() + ", " +
+                "\"amount\": 100.00, \"description\": \"Test transaction\", \"type\": \"ADD\"}";
 
         mockMvc.perform(post("/api/transact/new")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -1,4 +1,4 @@
-package ru.t1.java.clientregistrationservice;
+package ru.t1.java.clientregistrationservice.kafka;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

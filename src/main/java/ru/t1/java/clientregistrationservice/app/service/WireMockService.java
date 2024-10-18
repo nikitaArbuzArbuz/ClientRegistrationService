@@ -4,12 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
-import ru.t1.java.clientregistrationservice.web.CheckRequest;
 import ru.t1.java.clientregistrationservice.web.CheckResponse;
 import ru.t1.java.clientregistrationservice.web.CheckWebClient;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

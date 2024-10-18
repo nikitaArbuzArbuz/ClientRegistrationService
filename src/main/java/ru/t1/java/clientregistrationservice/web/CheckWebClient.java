@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.t1.java.clientregistrationservice.app.domain.dto.TransactionDto;
 
 import java.util.Optional;
 

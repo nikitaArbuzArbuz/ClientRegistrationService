@@ -1,9 +1,4 @@
-package ru.t1.java.clientregistrationservice;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+package ru.t1.java.clientregistrationservice.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +21,11 @@ import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrate
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
 
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTests {

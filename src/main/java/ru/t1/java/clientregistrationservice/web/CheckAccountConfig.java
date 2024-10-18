@@ -19,7 +19,7 @@ import java.time.Duration;
 
 @Configuration
 @RequiredArgsConstructor
-public class CheckClientConfig {
+public class CheckAccountConfig {
     @Value("${integration.url}")
     private String url;
 

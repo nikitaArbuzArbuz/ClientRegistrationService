@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
 import ru.t1.java.clientregistrationservice.adapter.kafka.KafkaTransactProducer;
 import ru.t1.java.clientregistrationservice.adapter.repository.AccountRepository;
 import ru.t1.java.clientregistrationservice.adapter.repository.TransactionRepository;

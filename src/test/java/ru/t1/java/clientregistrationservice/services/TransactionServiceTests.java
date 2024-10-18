@@ -1,4 +1,4 @@
-package ru.t1.java.clientregistrationservice;
+package ru.t1.java.clientregistrationservice.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

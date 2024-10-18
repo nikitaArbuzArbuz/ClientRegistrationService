@@ -1,4 +1,4 @@
-package ru.t1.java.clientregistrationservice;
+package ru.t1.java.clientregistrationservice.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,6 @@ import ru.t1.java.clientregistrationservice.util.JwtUtils;
 import ru.t1.java.clientregistrationservice.util.strategy.roles.RoleStrategy;
 import ru.t1.java.clientregistrationservice.util.strategy.roles.RoleStrategyFactory;
 
-import java.beans.Encoder;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
