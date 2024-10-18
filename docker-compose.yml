@@ -1,12 +1,6 @@
 version: '1.0'
 
 services:
-#  wiremock-demo:
-#    image: bscmsc/bsc-wire-mock:latest
-#    ports:
-#      - "8085:1398"
-#    volumes:
-#      - ./wiremock/mappings:/app/mappings
   postgres:
     image: postgres:11.13
     container_name: t1_bank_demo
@@ -43,9 +37,3 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-  wiremock-demo:
-    image: bscmsc/bsc-wire-mock:latest
-    ports:
-      - "8085:1398"
-    volumes:
-      - ./wiremock/mappings:/app/mappings
