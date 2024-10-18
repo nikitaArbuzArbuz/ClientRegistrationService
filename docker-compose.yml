@@ -1,7 +1,6 @@
 version: '1.0'
 
 services:
-
   postgres:
     image: postgres:11.13
     container_name: t1_bank_demo

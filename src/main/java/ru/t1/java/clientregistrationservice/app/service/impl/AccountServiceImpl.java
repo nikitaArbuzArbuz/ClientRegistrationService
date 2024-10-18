@@ -18,6 +18,7 @@ import ru.t1.java.clientregistrationservice.app.service.AccountService;
 import ru.t1.java.clientregistrationservice.app.service.ClientService;
 import ru.t1.java.clientregistrationservice.util.strategy.accounts.AccountStrategyFactory;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -64,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId).orElseThrow(() ->
                 new RuntimeException("Account not found"));
         account.blockAccount();
-        log.info("Аккаунт заблокирован ID: {}" , accountId);
+        log.info("Аккаунт заблокирован ID: {}", accountId);
         accountRepository.save(account);
     }
 

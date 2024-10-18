@@ -22,7 +22,7 @@ CREATE TABLE bank.accounts
     client_id      BIGINT,
     account_type   VARCHAR(20),
     balance        DECIMAL(19, 2) DEFAULT 0.00 CHECK (balance >= 0),
-    is_blocked     BOOLEAN DEFAULT FALSE,
+    is_blocked     BOOLEAN        DEFAULT FALSE,
     FOREIGN KEY (client_id) REFERENCES bank.clients (id) ON DELETE CASCADE
 );
 
