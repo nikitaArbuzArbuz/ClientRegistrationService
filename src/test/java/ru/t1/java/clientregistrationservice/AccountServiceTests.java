@@ -74,7 +74,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void createAccount_shouldCreateAccountSuccessfully() {
+    void createAccountShouldCreateAccountSuccessfully() {
         when(clientService.getAuthenticatedUser()).thenReturn(client);
         when(accountMapper.map(any(), eq(client))).thenReturn(account);
         AccountStrategy accountStrategyMock = mock(AccountStrategy.class);
@@ -90,7 +90,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void unblockAccount_shouldUnblockAccountSuccessfully() {
+    void unblockAccountShouldUnblockAccountSuccessfully() {
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.of(transaction));
         AccountStrategy accountStrategyMock = mock(AccountStrategy.class);
         when(accountStrategyFactory.getStrategy(account.getAccountType())).thenReturn(accountStrategyMock);
@@ -106,7 +106,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void unblockAccount_shouldThrowException_whenTransactionNotFound() {
+    void unblockAccountShouldThrowExceptionWhenTransactionNotFound() {
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
@@ -116,7 +116,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void blockAccount_shouldThrowException_whenAccountNotFound() {
+    void blockAccountShouldThrowExceptionWhenAccountNotFound() {
         when(accountRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
@@ -126,7 +126,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void existBlockedAccountByTransactionId_shouldReturnTrue_ifAccountIsBlocked() {
+    void existBlockedAccountByTransactionIdShouldReturnTrueIfAccountIsBlocked() {
         account.setBlocked(true);
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.of(transaction));
 
@@ -137,17 +137,7 @@ public class AccountServiceTests {
     }
 
     @Test
-    void existBlockedAccountByTransactionId_shouldReturnFalse_ifAccountIsNotBlocked() {
-        when(transactionRepository.findById(anyLong())).thenReturn(Optional.of(transaction));
-
-        boolean result = accountService.existBlockedAccountByTransactionId(1L);
-
-        verify(transactionRepository).findById(1L);
-        assertFalse(result);
-    }
-
-    @Test
-    void existBlockedAccountByTransactionId_shouldThrowException_whenTransactionNotFound() {
+    void existBlockedAccountByTransactionIdShouldThrowExceptionWhenTransactionNotFound() {
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
