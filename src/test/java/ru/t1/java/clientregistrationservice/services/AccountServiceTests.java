@@ -61,7 +61,7 @@ public class AccountServiceTests {
         client.setLogin("testUser");
 
         accountDto = new AccountDto();
-        accountDto.setAccountType(Account.AccountType.CREDIT); // Или другой тип
+        accountDto.setAccountType(Account.AccountType.CREDIT);
 
         account = new Account();
         account.setId(1L);
@@ -108,20 +108,16 @@ public class AccountServiceTests {
     @Test
     void unblockAccountShouldThrowExceptionWhenTransactionNotFound() {
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.empty());
-
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
                 accountService.unblockAccount(1L));
-
         assertEquals("Account not found", thrown.getMessage());
     }
 
     @Test
     void blockAccountShouldThrowExceptionWhenAccountNotFound() {
         when(accountRepository.findById(anyLong())).thenReturn(Optional.empty());
-
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
                 accountService.blockAccount(1L));
-
         assertEquals("Account not found", thrown.getMessage());
     }
 
@@ -129,9 +125,7 @@ public class AccountServiceTests {
     void existBlockedAccountByTransactionIdShouldReturnTrueIfAccountIsBlocked() {
         account.setBlocked(true);
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.of(transaction));
-
         boolean result = accountService.existBlockedAccountByTransactionId(1L);
-
         verify(transactionRepository).findById(1L);
         assertTrue(result);
     }
@@ -139,10 +133,8 @@ public class AccountServiceTests {
     @Test
     void existBlockedAccountByTransactionIdShouldThrowExceptionWhenTransactionNotFound() {
         when(transactionRepository.findById(anyLong())).thenReturn(Optional.empty());
-
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
                 accountService.existBlockedAccountByTransactionId(1L));
-
         assertEquals("Transaction not found!", thrown.getMessage());
     }
 }

@@ -50,11 +50,8 @@ public class ClientServiceTests {
     @Test
     void getAuthenticatedUserShouldThrowExceptionWhenUserNotFound() {
         when(clientRepository.findByLogin("testUser")).thenReturn(Optional.empty());
-
-        UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class, () -> {
-            clientService.getAuthenticatedUser();
-        });
-
+        UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class, () ->
+                clientService.getAuthenticatedUser());
         assertEquals("User not found!", thrown.getMessage());
     }
 }

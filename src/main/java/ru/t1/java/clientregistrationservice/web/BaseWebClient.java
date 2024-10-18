@@ -21,12 +21,11 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public abstract class BaseWebClient {
 
+    private final WebClient webClient;
     @Value("${integration.retry-count}")
     private Integer retryCount;
     @Value("${integration.retry-backoff}")
     private Integer retryBackoff;
-
-    private final WebClient webClient;
 
     public <T, R> ResponseEntity<R> post(Function<UriBuilder, URI> function, T request, Class<R> clazz) {
         try {

@@ -21,9 +21,7 @@ public class KafkaTransactProducerTests {
     @Test
     void sendTransactionToTopic() {
         Long transactionId = 1L;
-
         kafkaTransactProducer.sendTransact(transactionId);
-
         verify(template, times(1)).send("sendTransact-out-0", transactionId);
     }
 
@@ -31,7 +29,6 @@ public class KafkaTransactProducerTests {
     void sendTransactShouldHandleException() {
         Long transactionId = 1L;
         doThrow(new RuntimeException("Simulated exception")).when(template).send(anyString(), any());
-
         kafkaTransactProducer.sendTransact(transactionId);
     }
 }

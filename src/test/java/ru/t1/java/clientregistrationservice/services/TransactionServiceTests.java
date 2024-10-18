@@ -114,10 +114,8 @@ public class TransactionServiceTests {
     @Test
     void cancelTransactionShouldThrowExceptionWhenTransactionNotFound() {
         when(transactionRepository.findLastByAccountId(account.getId())).thenReturn(Optional.empty());
-
         RuntimeException thrown = assertThrows(RuntimeException.class, () ->
                 transactionService.cancelTransaction(transaction));
-
         assertEquals("Transaction not found", thrown.getMessage());
     }
 

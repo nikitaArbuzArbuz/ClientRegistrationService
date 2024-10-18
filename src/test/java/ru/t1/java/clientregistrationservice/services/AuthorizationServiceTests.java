@@ -58,14 +58,16 @@ public class AuthorizationServiceTests {
     @BeforeEach
     void setUp() {
         loginRequest = new LoginRequest("testUser", "testPassword");
-        userDetails = new UserDetailsImpl(1L, "testUser", "testEmail", "testPassword", Collections.emptyList());
+        userDetails = new UserDetailsImpl(1L, "testUser", "testEmail",
+                "testPassword", Collections.emptyList());
     }
 
     @Test
     void authorizeShouldReturnJwtResponseWhenAuthenticationIsSuccessful() {
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(authentication);
         when(jwtUtils.generateJwtToken(any(Authentication.class))).thenReturn("jwt.token.here");
 
         JwtResponse response = authorizationService.authorize(loginRequest);
@@ -100,9 +102,8 @@ public class AuthorizationServiceTests {
         signUpRequest.setUsername("existingUser");
         when(clientRepository.existsByLogin(signUpRequest.getUsername())).thenReturn(true);
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            authorizationService.register(signUpRequest);
-        });
+        RuntimeException thrown = assertThrows(RuntimeException.class, () ->
+                authorizationService.register(signUpRequest));
 
         assertEquals("Error: Username is already taken!", thrown.getMessage());
     }
@@ -113,9 +114,8 @@ public class AuthorizationServiceTests {
         signUpRequest.setEmail("existingEmail@test.com");
         when(clientRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);
 
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            authorizationService.register(signUpRequest);
-        });
+        RuntimeException thrown = assertThrows(RuntimeException.class, () ->
+                authorizationService.register(signUpRequest));
 
         assertEquals("Error: Email is already in use!", thrown.getMessage());
     }

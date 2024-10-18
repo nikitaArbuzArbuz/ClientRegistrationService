@@ -20,9 +20,6 @@ import java.time.Duration;
 @Configuration
 @RequiredArgsConstructor
 public class CheckAccountConfig {
-    @Value("${integration.url}")
-    private String url;
-
     private final ConnectionProvider connProvider = ConnectionProvider
             .builder("webclient-conn-pool")
             .maxConnections(80)
@@ -31,6 +28,8 @@ public class CheckAccountConfig {
             .pendingAcquireMaxCount(10)
             .pendingAcquireTimeout(Duration.ofMillis(40000))
             .build();
+    @Value("${integration.url}")
+    private String url;
 
     @Bean
     public CheckWebClient checkWebClient(ClientHttp clientHttp) {
