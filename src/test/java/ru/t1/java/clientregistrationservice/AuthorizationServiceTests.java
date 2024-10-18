@@ -63,7 +63,7 @@ public class AuthorizationServiceTests {
     }
 
     @Test
-    void authorize_shouldReturnJwtResponse_whenAuthenticationIsSuccessful() {
+    void authorizeShouldReturnJwtResponseWhenAuthenticationIsSuccessful() {
         Authentication authentication = mock(Authentication.class);
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
@@ -77,7 +77,7 @@ public class AuthorizationServiceTests {
     }
 
     @Test
-    void register_shouldRegisterUserSuccessfully() {
+    void registerShouldRegisterUserSuccessfully() {
         SignupRequest signUpRequest = new SignupRequest();
         signUpRequest.setUsername("newUser");
         signUpRequest.setEmail("newEmail@test.com");
@@ -96,7 +96,7 @@ public class AuthorizationServiceTests {
     }
 
     @Test
-    void register_shouldThrowException_whenUsernameIsTaken() {
+    void registerShouldThrowExceptionWhenUsernameIsTaken() {
         SignupRequest signUpRequest = new SignupRequest();
         signUpRequest.setUsername("existingUser");
         when(clientRepository.existsByLogin(signUpRequest.getUsername())).thenReturn(true);
@@ -109,7 +109,7 @@ public class AuthorizationServiceTests {
     }
 
     @Test
-    void register_shouldThrowException_whenEmailIsTaken() {
+    void registerShouldThrowExceptionWhenEmailIsTaken() {
         SignupRequest signUpRequest = new SignupRequest();
         signUpRequest.setEmail("existingEmail@test.com");
         when(clientRepository.existsByEmail(signUpRequest.getEmail())).thenReturn(true);

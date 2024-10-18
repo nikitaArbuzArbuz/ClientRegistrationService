@@ -38,7 +38,7 @@ public class ClientServiceTests {
     }
 
     @Test
-    void getAuthenticatedUser_shouldReturnClient_whenUserIsAuthenticated() {
+    void getAuthenticatedUserShouldReturnClientWhenUserIsAuthenticated() {
         when(clientRepository.findByLogin(client.getLogin())).thenReturn(Optional.of(client));
 
         Client result = clientService.getAuthenticatedUser();
@@ -48,7 +48,7 @@ public class ClientServiceTests {
     }
 
     @Test
-    void getAuthenticatedUser_shouldThrowException_whenUserNotFound() {
+    void getAuthenticatedUserShouldThrowExceptionWhenUserNotFound() {
         when(clientRepository.findByLogin("testUser")).thenReturn(Optional.empty());
 
         UsernameNotFoundException thrown = assertThrows(UsernameNotFoundException.class, () -> {
